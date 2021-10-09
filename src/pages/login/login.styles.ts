@@ -41,13 +41,13 @@ export const Container = styled.div`
 
     form label{
         font-size: 0.9rem;
-        margin: 5px 0;
+        margin: 20px 0 5px 0;
     }
 
     form input{
         padding: 10px 0;
-        border-radius: 5px;
         border: none;
+        border-bottom: 2px solid #38304e;
         background: none;
         color: white;
         outline: none;
@@ -68,11 +68,13 @@ export const Container = styled.div`
         -webkit-box-shadow: 0 0 0px 1000px #38304e inset;
         transition: background-color 5000s ease-in-out 0s;
         padding: 10px 10px;
+        border-radius: 5px;
     }
 
     form input:focus{
         background: #38304e;
         padding: 10px 10px;
+        border-radius: 10px;
     }
 
     form input::placeholder{
