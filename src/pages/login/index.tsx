@@ -4,23 +4,16 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from "react-hook-form"
 import * as yup from 'yup'
 import { useAuth } from "../../Providers/Auth"
+import {useHistory} from 'react-router-dom'
 
-interface formData {
-    username: String,
+interface formDataLogin {
     email: String,
     password: String
 }
 
-interface iUser{
-    token: String,
-    user:{
-        _id: String,
-        username: String,
-        email: String
-    }
-}
-
 const Login = () => {
+
+    const history = useHistory()
 
     const { reqLogin } = useAuth()
 
@@ -34,7 +27,7 @@ const Login = () => {
     })
 
 
-    const onSubmitLogin = (data: formData) => {
+    const onSubmitLogin = async(data: formDataLogin) => {
         reqLogin(data)
     }
 

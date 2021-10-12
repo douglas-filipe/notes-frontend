@@ -1,30 +1,35 @@
-import { createContext, useState, useContext, ReactNode } from "react";
+import { createContext, useContext, ReactNode, useState } from "react";
 import toast from "react-hot-toast";
 import { useHistory } from "react-router";
 import api from "../../services/api";
-
 
 interface AuthProviderProp {
     children: ReactNode
 }
 
 interface AuthProviderData {
+    reqRegister: (data: formData) => void,
+    reqLogin: (data: formDataLogin) => void,
     userData: {
-        token: String,
+        token: String
         user: {
             _id: String,
             username: String,
             email: String
         }
-    },
-    reqRegister: (data: formData) => void,
-    reqLogin: (data: formData) => void
+    }
 }
 
 interface formData {
     username: String,
     email: String,
-    password: String
+    password: String,
+}
+
+
+interface formDataLogin {
+    email: String,
+    password: String,
 }
 
 
@@ -32,7 +37,7 @@ const AuthContext = createContext<AuthProviderData>({} as AuthProviderData)
 
 export const AuthProvider = ({ children }: AuthProviderProp) => {
 
-    const userData = JSON.parse(localStorage.getItem("@notes/user") || "")
+    const [userData, setUserData] = useState(JSON.parse(localStorage.getItem("@notes/token") || "{}"))
 
     const history = useHistory()
 
@@ -43,16 +48,15 @@ export const AuthProvider = ({ children }: AuthProviderProp) => {
                 email: data.email,
                 password: data.password
             })
-            await console.log(response)
             await toast.success('Conta criada!')
-            history.push('/login')
+            await history.push('/login')
         } catch (e) {
             toast.error('Email já cadastrado')
         }
 
     }
 
-    const reqLogin = async (data: formData) => {
+    const reqLogin = async (data: formDataLogin) => {
         try {
 
             const response = await api.post("/user/login", {
@@ -60,16 +64,18 @@ export const AuthProvider = ({ children }: AuthProviderProp) => {
                 password: data.password
             })
             await toast.success('Sucesso ao entrar!!')
-            await localStorage.setItem("@notes/user", JSON.stringify(response.data))
-
-        } catch (e) {
+            await localStorage.setItem("@notes/token", JSON.stringify(response.data))
+            await history.push("/")
+            setUserData(JSON.parse(localStorage.getItem("@notes/token") || "{}"))
+            
+        }catch (e) {
             toast.error('Email ou senha inválidos')
         }
     }
 
 
     return (
-        <AuthContext.Provider value={{ userData, reqRegister, reqLogin }}>
+        <AuthContext.Provider value={{ reqRegister, reqLogin, userData }}>
             {children}
         </AuthContext.Provider>
     )

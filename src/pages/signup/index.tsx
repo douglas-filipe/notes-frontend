@@ -13,7 +13,7 @@ interface formData {
 
 const Signup = () => {
 
-    const {reqRegister} = useAuth()
+    const { reqRegister } = useAuth()
 
     const schemaSignup = yup.object().shape({
         email: yup.string().email('Email inválido').required('*Campo obrigatório'),
