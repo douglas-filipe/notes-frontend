@@ -1,7 +1,9 @@
 import { createContext, useContext, ReactNode, useState } from "react";
 import toast from "react-hot-toast";
-import { useHistory } from "react-router";
+import { BiWindows } from "react-icons/bi";
+import { useHistory } from "react-router-dom";
 import api from "../../services/api";
+
 
 interface AuthProviderProp {
     children: ReactNode
@@ -65,8 +67,8 @@ export const AuthProvider = ({ children }: AuthProviderProp) => {
             })
             await toast.success('Sucesso ao entrar!!')
             await localStorage.setItem("@notes/token", JSON.stringify(response.data))
-            await history.push("/")
-            setUserData(JSON.parse(localStorage.getItem("@notes/token") || "{}"))
+            await setUserData(JSON.parse(localStorage.getItem("@notes/token") || "{}"))
+            await history.push('/')
             
         }catch (e) {
             toast.error('Email ou senha inválidos')

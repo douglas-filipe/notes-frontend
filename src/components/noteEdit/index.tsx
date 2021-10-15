@@ -1,8 +1,12 @@
-import { Container, Header } from "./noteEdit.styles"
-import { useParams } from "react-router-dom"
-import api from "../../services/api"
-import { FormEvent, ReactNode, useEffect, useState } from "react"
+import { Container, Header, Icons, NoteEditSection, Save } from "./noteEdit.styles"
+import { Link, useParams } from "react-router-dom"
+import { useEffect, useState } from "react"
 import { useAuth } from "../../Providers/Auth"
+import { BiArrowBack } from 'react-icons/bi'
+import { RiEdit2Fill } from 'react-icons/ri'
+import { MdMoreVert } from "react-icons/md"
+import { IoMdSave } from 'react-icons/io'
+import api from "../../services/api"
 
 interface iNote {
     desc: String,
@@ -14,24 +18,25 @@ interface iNote {
 export const NoteEdit = () => {
 
     const { userData: { token, user: { _id: userId } } } = useAuth()
-    const [current, setCurrent] = useState<string>('')
+
+    const [title, setTitle] = useState<string>('')
+    const [desc, setDesc] = useState<string>('')
+    const [previousTitle, setPreviousTitle] = useState<string>('')
+    const [previousDesc, setPreviousDesc] = useState<string>('')
 
     useEffect(() => {
         reqNoteOne()
     }, [])
 
-    /*
-    const handleChange = async (e: React.ChangeEvent<HTMLInputElement> , valor: string) => {
-        setCurrent(e.target.value)
-        console.log(valor)
-    }*/
 
     const { id } = useParams<{ id: string }>()
 
     const update = () => {
         api.put(`/notes/${id}`, {
-            title: current
+            title: title,
+            desc: desc
         }, { headers: { 'token': `${token}` } })
+        reqNoteOne()
     }
 
 
@@ -39,19 +44,50 @@ export const NoteEdit = () => {
         const response = await api.get<iNote>(`/notes/${id}`,
             { headers: { 'token': `${token}` } }
         )
-        setCurrent(response.data.title as string)
+        
+        setTitle(response.data.title as string)
+        setDesc(response.data.desc as string)
+        setPreviousTitle(response.data.title as string)
+        setPreviousDesc(response.data.desc as string)
+
     }
 
-    
+
     return (
         <Container>
-            <Header onChange={update}>
-
-                <input onChange={(e) => setCurrent(e.target.value)} type="text" value={current} />
-
+            <Header>
+                <Link to="/">
+                    <BiArrowBack className="Back" />
+                </Link>
+                <input onChange={(e) => setTitle(e.target.value)} type="text" value={title} />
+                <Icons>
+                    <RiEdit2Fill className="Edit" />
+                    <MdMoreVert className="More" />
+                </Icons>
             </Header>
+
+            <NoteEditSection>
+
+                <textarea value={desc} onChange={(e) => setDesc(e.target.value)}></textarea>
+
+            </NoteEditSection>
             
-            <p onClick={update}>Save</p>
+            
+
+                {title === previousTitle && desc === previousDesc ?
+                
+                <Save className="Hidden">
+
+                </Save>
+                :
+
+                <Save>
+                    <IoMdSave onClick={update}/>
+                </Save>
+                
+                }
+
+            
 
         </Container>
     )

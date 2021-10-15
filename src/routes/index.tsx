@@ -1,27 +1,35 @@
-import { Switch, Route } from "react-router-dom"
+import { Switch, Route, Redirect } from "react-router-dom"
 import { NoteEdit } from "../components/noteEdit"
 import { Dashboard } from "../pages/dashboard"
 import Login from "../pages/login"
 import Signup from "../pages/signup"
+import { useAuth } from "../Providers/Auth"
+
+interface iLocalStorage{
+    token: String
+}
 
 export const Routes = () =>{
+    const {userData} = useAuth()
+    const {token} = userData
+
     return(
         <Switch>
 
             <Route path="/" exact>
-                <Dashboard/>
+                {token === undefined ? <Redirect to="/login"/> : <Dashboard/>}
             </Route>
 
             <Route path="/note/:id" exact>
-               <NoteEdit/>
+                {token === undefined ? <Redirect to="/login"/> : <NoteEdit/>}
             </Route>
 
             <Route path="/login" exact>
-                <Login/>
+                {token === undefined ? <Login/> : <Redirect to="/"/>}
             </Route>
 
             <Route path="/signup" exact>
-                <Signup/>
+                {token === undefined ? <Signup/> : <Redirect to="/"/>}
             </Route>
 
         </Switch>

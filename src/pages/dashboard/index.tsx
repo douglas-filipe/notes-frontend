@@ -16,14 +16,24 @@ interface INotes {
     _id: String
 }
 
+interface iLocalStorage{
+    token: String,
+    user: {
+        _id: String
+    }
+}
+
 export const Dashboard = () => {
 
     const history = useHistory()
 
-    const { userData: { token, user: { _id: userId } } } = useAuth()
+
+    const userData:iLocalStorage = JSON.parse(localStorage.getItem("@notes/token") || "{}")
+    const {token, user: {_id: userId}} = userData
 
     const [notes, setNotes] = useState<INotes[]>([] as INotes[])
     const [oneUser, setOneUser] = useState<INotes[]>([] as INotes[])
+
 
     useEffect(() => {
         reqNotes()
@@ -38,7 +48,7 @@ export const Dashboard = () => {
 
     const reqNewNote = async () => {
         const response = await api.post("/notes",
-            { title: "Nova", desc: "Nova", author: userId },
+            { title: "Título", desc: "Nota", author: userId },
             { headers: { 'token': `${token}` } })
         const converting = await (JSON.stringify(response.data))
         const descomprimindo = await JSON.parse(converting)
@@ -51,12 +61,9 @@ export const Dashboard = () => {
         history.push("/login")
     }
 
-    if (window.PointerEvent) {
-
-    }
 
     const { id } = useParams<{ id: string }>()
-    console.log(id)
+
 
     return (
         <Main>
