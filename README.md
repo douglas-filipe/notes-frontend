@@ -39,7 +39,7 @@ Além disto é bom ter um editor para trabalhar com o código como [VSCode](http
 
 ```bash
 # Vá para a pasta da aplicação Front End
-$ cd nodes-frontend
+$ cd notes-frontend
 # Instale as dependências
 $ yarn
 # Execute a aplicação em modo de desenvolvimento
