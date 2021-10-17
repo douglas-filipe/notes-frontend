@@ -4,7 +4,6 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm } from "react-hook-form"
 import * as yup from 'yup'
 import { useAuth } from "../../Providers/Auth"
-import {useHistory} from 'react-router-dom'
 
 interface formDataLogin {
     email: String,
@@ -12,8 +11,6 @@ interface formDataLogin {
 }
 
 const Login = () => {
-
-    const history = useHistory()
 
     const { reqLogin } = useAuth()
 

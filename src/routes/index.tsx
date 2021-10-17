@@ -21,7 +21,7 @@ export const Routes = () =>{
             </Route>
 
             <Route path="/note/:id" exact>
-                {token === undefined ? <Redirect to="/login"/> : <NoteEdit/>}
+                {token === undefined ? <Redirect to="/login"/> : <Dashboard/>}
             </Route>
 
             <Route path="/login" exact>

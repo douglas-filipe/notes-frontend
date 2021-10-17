@@ -5,6 +5,7 @@ export const Container = styled.section`
     height: 100vh;
     background-color: #0e121b;
     overflow: auto;
+    
 
     ::-webkit-scrollbar {
         display: none;
@@ -13,31 +14,29 @@ export const Container = styled.section`
     .Hidden{
         display: none;
     }
+
+    
 `
 
 export const Header = styled.header`
     width: 100vw;
-    height: 35px;
+    height: 60px;
     color: white;
-    position: fixed;
     border-bottom: 1px solid #5F77AB;
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: #0e121b;
+    margin-top: 10px;
+    position: fixed;
+    top: 25px;
 
-    .Back{
-        margin-left: 15px;
-        margin-right: 15px;
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .More{
-        margin-right: 15px;
-        margin-left: 15px;
+    .Delete{
+        padding-right: 5px;
+        width: 25px;
+        height: 25px;
+        color: #931F1D;
+        cursor: pointer;
     }
 
 
@@ -49,6 +48,7 @@ export const Header = styled.header`
         outline: none;
         font-size: 1rem;
         width: 50%;
+        padding-left: 10px;
     }
 
     svg{
@@ -71,12 +71,13 @@ export const NoteEditSection = styled.section`
         outline: none;
         background: none;
         color: white;
-        padding-top: 50px;
-        padding-left: 5px;
+        padding-top: 10px;
+        padding-left: 10px;
         font-size: 1.5rem;
         height: 100vh;
         overflow: auto;
         resize: none;
+        margin-top: 100px;
 
         ::-webkit-scrollbar {
         display: none;
@@ -86,7 +87,6 @@ export const NoteEditSection = styled.section`
     
     }
 
-    
 
 
 `

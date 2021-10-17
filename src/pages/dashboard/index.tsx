@@ -1,13 +1,14 @@
-import { useAuth } from "../../Providers/Auth"
 import { Container, Search, Main, Notes } from "./dashboard.styles"
 import api from "../../services/api"
 import { useEffect, useState } from "react"
 import { useHistory, useParams } from "react-router"
 import { NavLink } from "react-router-dom"
-import { BiSearchAlt } from 'react-icons/bi'
+import { BiExit, BiSearchAlt } from 'react-icons/bi'
 import { HiOutlineMenuAlt3 } from 'react-icons/hi'
-import { AiOutlineMail, AiOutlinePlusCircle } from 'react-icons/ai'
 import { FaPlusCircle } from 'react-icons/fa'
+import { NoteEdit } from "../../components/noteEdit"
+import { AiFillCloseCircle } from 'react-icons/ai'
+import moment from "moment"
 
 interface INotes {
     createdAt: String,
@@ -16,7 +17,7 @@ interface INotes {
     _id: String
 }
 
-interface iLocalStorage{
+interface iLocalStorage {
     token: String,
     user: {
         _id: String
@@ -28,11 +29,13 @@ export const Dashboard = () => {
     const history = useHistory()
 
 
-    const userData:iLocalStorage = JSON.parse(localStorage.getItem("@notes/token") || "{}")
-    const {token, user: {_id: userId}} = userData
+    const userData: iLocalStorage = JSON.parse(localStorage.getItem("@notes/token") || "{}")
+    const { token, user: { _id: userId } } = userData
 
     const [notes, setNotes] = useState<INotes[]>([] as INotes[])
-    const [oneUser, setOneUser] = useState<INotes[]>([] as INotes[])
+    const [notesSearch, setSearchNotes] = useState<INotes[]>([] as INotes[])
+    const [noteSearchAlone, setNoteSearchAlone] = useState<string>('')
+    const [visible, setVisible] = useState<Boolean>(false)
 
 
     useEffect(() => {
@@ -43,8 +46,18 @@ export const Dashboard = () => {
         const response = await api.get(`/notes`,
             { headers: { 'token': `${token}` } }
         )
-        setNotes(response.data)
+        await setNotes(response.data)
+        setVisible(false)
     }
+
+    const reqSearchNotes = async () => {
+        const response = await api.get(`/notes/search`,
+            {params: {query: noteSearchAlone}},
+            //{ headers: { 'token': `${token}` } },
+        )
+        setSearchNotes(response.data)
+    }
+
 
     const reqNewNote = async () => {
         const response = await api.post("/notes",
@@ -57,44 +70,64 @@ export const Dashboard = () => {
     }
 
     const logout = async () => {
-        await localStorage.clear()
-        history.push("/login")
+        await localStorage.removeItem("@notes/token")
+        window.location.reload()
     }
 
 
     const { id } = useParams<{ id: string }>()
 
+    const formatData = (date: String) => {
+        const data = moment(date as string).format("DD/MM/YYYY")
+        return data
+    }
+
+
 
     return (
         <Main>
-            <Container>
-                <Search>
-                    <div className="Input">
-                        <BiSearchAlt />
-                        <input type="text" placeholder="Pesquise aqui" />
-                    </div>
-                    <HiOutlineMenuAlt3 className="Menu" />
-                </Search>
+            <header className="Header">
+                <HiOutlineMenuAlt3 className="Menu" onClick={() => setVisible(true)} />
+                <BiExit onClick={logout} />
+            </header>
+            <Container visible={visible}>
 
-                <Notes>
+                <Notes visible={visible}>
+                    <AiFillCloseCircle className="Close" onClick={() => setVisible(false)} />
+                    <h1>Suas notas</h1>
+                    <h3 onClick={reqNewNote}>
+                        <FaPlusCircle />
+                        <p>Adicionar</p>
+                    </h3>
+                    
                     {notes.map(n => {
-                        return <NavLink to={{ pathname: `/note/${n._id}` }} activeClassName="selected">
+                        return <NavLink onClick={() => setVisible(false)} to={{ pathname: `/note/${n._id}` }} activeClassName="selected" >
                             <p>{n.desc.substring(0, 20)}...</p>
-                            <p>{n.createdAt}</p>
+                            <p>{formatData(n.createdAt)}</p>
                         </NavLink>
                     })}
                 </Notes>
 
-                <FaPlusCircle className="Plus" onClick={reqNewNote}></FaPlusCircle>
-
             </Container>
+
+            {id === undefined ?
+                <h1 className="SelectNote">Selecione uma nota ou adicione uma ao lado</h1>
+                :
+                <NoteEdit id={id} reqNotes={reqNotes} />
+            }
+
+
+
         </Main>
     )
 }
 
-/**
+/** Ainda vou continuar
+ * <Search onChange={reqSearchNotes}>
+                        <div className="Input">
+                            <BiSearchAlt />
+                            <input type="text" placeholder="Pesquise aqui" value={noteSearchAlone} onChange={(e) => setNoteSearchAlone(e.target.value)}/>
+                        </div>
+                    </Search>
  * 
- * 
-                <div onClick={logout}>Sair</div>
-
  */

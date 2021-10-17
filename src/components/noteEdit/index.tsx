@@ -1,12 +1,12 @@
 import { Container, Header, Icons, NoteEditSection, Save } from "./noteEdit.styles"
-import { Link, useParams } from "react-router-dom"
-import { useEffect, useState } from "react"
+import { useHistory } from "react-router-dom"
+import { useEffect, useRef, useState } from "react"
 import { useAuth } from "../../Providers/Auth"
-import { BiArrowBack } from 'react-icons/bi'
-import { RiEdit2Fill } from 'react-icons/ri'
-import { MdMoreVert } from "react-icons/md"
 import { IoMdSave } from 'react-icons/io'
 import api from "../../services/api"
+import { AiFillDelete } from "react-icons/ai"
+import toast from "react-hot-toast"
+
 
 interface iNote {
     desc: String,
@@ -15,7 +15,12 @@ interface iNote {
     createdAt: String
 }
 
-export const NoteEdit = () => {
+interface NoteProps {
+    id: string,
+    reqNotes: () => void
+}
+
+export const NoteEdit = ({ id, reqNotes }: NoteProps) => {
 
     const { userData: { token, user: { _id: userId } } } = useAuth()
 
@@ -24,19 +29,27 @@ export const NoteEdit = () => {
     const [previousTitle, setPreviousTitle] = useState<string>('')
     const [previousDesc, setPreviousDesc] = useState<string>('')
 
+    const history = useHistory()
+
     useEffect(() => {
         reqNoteOne()
-    }, [])
+    }, [id])
 
-
-    const { id } = useParams<{ id: string }>()
-
-    const update = () => {
-        api.put(`/notes/${id}`, {
+    const update = async () => {
+        await api.put(`/notes/${id}`, {
             title: title,
             desc: desc
         }, { headers: { 'token': `${token}` } })
-        reqNoteOne()
+        await reqNoteOne()
+        reqNotes()
+    }
+
+    const reqDeleteNote = async () => {
+        await api.delete(`/notes/${id}`,
+            { headers: { 'token': `${token}` } })
+        await history.push("/")
+        toast.success("Nota deletada")
+        reqNotes()
     }
 
 
@@ -44,7 +57,7 @@ export const NoteEdit = () => {
         const response = await api.get<iNote>(`/notes/${id}`,
             { headers: { 'token': `${token}` } }
         )
-        
+
         setTitle(response.data.title as string)
         setDesc(response.data.desc as string)
         setPreviousTitle(response.data.title as string)
@@ -56,38 +69,34 @@ export const NoteEdit = () => {
     return (
         <Container>
             <Header>
-                <Link to="/">
-                    <BiArrowBack className="Back" />
-                </Link>
-                <input onChange={(e) => setTitle(e.target.value)} type="text" value={title} />
+                <input placeholder="Defina o título" onChange={(e) => setTitle(e.target.value)} type="text" value={title} />
                 <Icons>
-                    <RiEdit2Fill className="Edit" />
-                    <MdMoreVert className="More" />
+                    <AiFillDelete className="Delete" onClick={reqDeleteNote} />
                 </Icons>
             </Header>
 
             <NoteEditSection>
 
-                <textarea value={desc} onChange={(e) => setDesc(e.target.value)}></textarea>
+                <textarea placeholder="Digite sua nota aqui" value={desc} onChange={(e) => setDesc(e.target.value)}></textarea>
 
             </NoteEditSection>
-            
-            
 
-                {title === previousTitle && desc === previousDesc ?
-                
+
+
+            {title === previousTitle && desc === previousDesc ?
+
                 <Save className="Hidden">
 
                 </Save>
                 :
 
                 <Save>
-                    <IoMdSave onClick={update}/>
+                    <IoMdSave onClick={update} />
                 </Save>
-                
-                }
 
-            
+            }
+
+
 
         </Container>
     )
