@@ -71,7 +71,7 @@ export const NoteEditSection = styled.section`
         outline: none;
         background: none;
         color: white;
-        padding-top: 10px;
+        padding-top: 130px;
         padding-left: 10px;
         font-size: 1.5rem;
         height: 100vh;
@@ -87,7 +87,7 @@ export const NoteEditSection = styled.section`
 
     @media(min-width: 768px){
         textarea{
-            padding-top: 130px;
+            padding-top: 10px;
         }
     }
 
