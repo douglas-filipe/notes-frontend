@@ -15,7 +15,7 @@
 ## Sobre o projeto
 <p align="center">Este projeto foi desenvolvido com o objetivo de fixar os conhecimentos em React e Node</p>
 <h3 align="center">
-    <a href="https://notes-app01.vercel.app/">Clique aqui para acessar o projeto</a>
+    <a href="https://notes-app01.vercel.app/" target="_blank">Clique aqui para acessar o projeto</a>
 </h3>
 
 ---
