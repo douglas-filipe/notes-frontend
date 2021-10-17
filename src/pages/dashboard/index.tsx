@@ -65,8 +65,8 @@ export const Dashboard = () => {
             { headers: { 'token': `${token}` } })
         const converting = await (JSON.stringify(response.data))
         const descomprimindo = await JSON.parse(converting)
+        await reqNotes()
         await history.push(`/note/${descomprimindo['_id']}`)
-        reqNotes()
     }
 
     const logout = async () => {
@@ -81,8 +81,6 @@ export const Dashboard = () => {
         const data = moment(date as string).format("DD/MM/YYYY")
         return data
     }
-
-
 
     return (
         <Main>
