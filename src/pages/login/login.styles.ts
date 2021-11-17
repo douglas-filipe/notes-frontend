@@ -82,7 +82,6 @@ export const Container = styled.div`
     }
 
     form input:focus::placeholder{
-        color: white;
     }
 
     form button{

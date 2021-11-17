@@ -6,6 +6,7 @@ import { IoMdSave } from 'react-icons/io'
 import api from "../../services/api"
 import { AiFillDelete } from "react-icons/ai"
 import toast from "react-hot-toast"
+import { Loading } from "../loading"
 
 
 interface iNote {
@@ -28,11 +29,16 @@ export const NoteEdit = ({ id, reqNotes }: NoteProps) => {
     const [desc, setDesc] = useState<string>('')
     const [previousTitle, setPreviousTitle] = useState<string>('')
     const [previousDesc, setPreviousDesc] = useState<string>('')
+    const [loading, setLoading] = useState<boolean>(false)
 
     const history = useHistory()
 
     useEffect(() => {
-        reqNoteOne()
+        const loadNote = async () => {
+            await reqNoteOne()
+            setLoading(true)
+        }
+        loadNote()
     }, [id])
 
     const update = async () => {
@@ -67,34 +73,47 @@ export const NoteEdit = ({ id, reqNotes }: NoteProps) => {
 
 
     return (
+
         <Container>
-            <Header>
-                <input placeholder="Defina o título" onChange={(e) => setTitle(e.target.value)} type="text" value={title} />
-                <Icons>
-                    <AiFillDelete className="Delete" onClick={reqDeleteNote} />
-                </Icons>
-            </Header>
 
-            <NoteEditSection>
+            {loading ?
 
-                <textarea placeholder="Digite sua nota aqui" value={desc} onChange={(e) => setDesc(e.target.value)}></textarea>
+                <>
+                    <Header>
+                        <input placeholder="Defina o título" onChange={(e) => setTitle(e.target.value)} type="text" value={title} />
+                        <Icons>
+                            <AiFillDelete className="Delete" onClick={reqDeleteNote} />
+                        </Icons>
+                    </Header>
 
-            </NoteEditSection>
+                    <NoteEditSection>
+
+                        <textarea placeholder="Digite sua nota aqui" value={desc} onChange={(e) => setDesc(e.target.value)}></textarea>
+
+                    </NoteEditSection>
 
 
 
-            {title === previousTitle && desc === previousDesc ?
+                    {title === previousTitle && desc === previousDesc ?
 
-                <Save className="Hidden">
+                        <Save className="Hidden">
 
-                </Save>
+                        </Save>
+                        :
+
+                        <Save>
+                            <IoMdSave onClick={update} />
+                        </Save>
+
+                    }
+                </>
+
                 :
 
-                <Save>
-                    <IoMdSave onClick={update} />
-                </Save>
+                <Loading />
 
             }
+
 
 
 

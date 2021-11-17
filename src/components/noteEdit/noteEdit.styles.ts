@@ -73,7 +73,7 @@ export const NoteEditSection = styled.section`
         color: white;
         padding-top: 130px;
         padding-left: 10px;
-        font-size: 1.5rem;
+        font-size: 1rem;
         height: 100vh;
         overflow: auto;
         resize: none;

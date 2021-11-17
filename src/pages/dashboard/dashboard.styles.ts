@@ -161,9 +161,10 @@ export const Notes = styled.div<iVisible>`
         width: 40px;
         height: 40px;
         color: #931F1D;
-        transform: translateX(50%);
-        position: relative;
+        transform: translate(50%, 20%);
+        position: absolute;
         left: 65%;
+        top: -0.5%;
         cursor: pointer;
     }
 

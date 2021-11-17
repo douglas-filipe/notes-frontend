@@ -8,6 +8,7 @@ import { HiOutlineMenuAlt3 } from 'react-icons/hi'
 import { FaPlusCircle } from 'react-icons/fa'
 import { NoteEdit } from "../../components/noteEdit"
 import { AiFillCloseCircle } from 'react-icons/ai'
+import { Loading } from "../../components/loading"
 import moment from "moment"
 
 interface INotes {
@@ -36,10 +37,14 @@ export const Dashboard = () => {
     const [notesSearch, setSearchNotes] = useState<INotes[]>([] as INotes[])
     const [noteSearchAlone, setNoteSearchAlone] = useState<string>('')
     const [visible, setVisible] = useState<Boolean>(false)
-
+    const [loading, setLoading] = useState<boolean>(false)
 
     useEffect(() => {
-        reqNotes()
+        const load = async () => {
+            await reqNotes()
+            setLoading(true)
+        }
+        load()
     }, [token])
 
     const reqNotes = async () => {
@@ -52,7 +57,7 @@ export const Dashboard = () => {
 
     const reqSearchNotes = async () => {
         const response = await api.get(`/notes/search`,
-            {params: {query: noteSearchAlone}},
+            { params: { query: noteSearchAlone } },
             //{ headers: { 'token': `${token}` } },
         )
         setSearchNotes(response.data)
@@ -84,35 +89,45 @@ export const Dashboard = () => {
 
     return (
         <Main>
-            <header className="Header">
-                <HiOutlineMenuAlt3 className="Menu" onClick={() => setVisible(true)} />
-                <BiExit onClick={logout} />
-            </header>
-            <Container visible={visible}>
+            {loading ?
+                <>
+                    <header className="Header">
+                        <HiOutlineMenuAlt3 className="Menu" onClick={() => setVisible(true)} />
+                        <BiExit onClick={logout} />
 
-                <Notes visible={visible}>
-                    <AiFillCloseCircle className="Close" onClick={() => setVisible(false)} />
-                    <h1>Suas notas</h1>
-                    <h3 onClick={reqNewNote}>
-                        <FaPlusCircle />
-                        <p>Adicionar</p>
-                    </h3>
-                    
-                    {notes.map(n => {
-                        return <NavLink onClick={() => setVisible(false)} to={{ pathname: `/note/${n._id}` }} activeClassName="selected" >
-                            <p>{n.desc.substring(0, 20)}...</p>
-                            <p>{formatData(n.createdAt)}</p>
-                        </NavLink>
-                    })}
-                </Notes>
+                    </header>
+                    <Container visible={visible}>
 
-            </Container>
+                        <Notes visible={visible}>
+                            <AiFillCloseCircle className="Close" onClick={() => setVisible(false)} />
+                            <h1>Suas notas</h1>
+                            <h3 onClick={reqNewNote}>
+                                <FaPlusCircle />
+                                <p>Adicionar</p>
+                            </h3>
 
-            {id === undefined ?
-                <h1 className="SelectNote">Selecione uma nota ou adicione uma ao lado</h1>
+                            {notes.map(n => {
+                                return <NavLink onClick={() => setVisible(false)} to={{ pathname: `/note/${n._id}` }} activeClassName="selected" >
+                                    <p>{n.desc.substring(0, 20)}...</p>
+                                    <p>{formatData(n.createdAt)}</p>
+                                </NavLink>
+                            })}
+                        </Notes>
+
+                    </Container>
+
+                    {id === undefined ?
+                        <h1 className="SelectNote">Selecione uma nota ou adicione uma ao lado</h1>
+                        :
+                        <NoteEdit id={id} reqNotes={reqNotes} />
+                    }
+                </>
                 :
-                <NoteEdit id={id} reqNotes={reqNotes} />
+                <>
+                    <Loading/>
+                </>
             }
+
 
 
 
