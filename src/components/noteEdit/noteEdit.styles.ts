@@ -80,7 +80,7 @@ export const NoteEditSection = styled.section`
         margin-top: 100px;
 
         ::-webkit-scrollbar {
-        display: none;
+            display: none;
         }
     
     }

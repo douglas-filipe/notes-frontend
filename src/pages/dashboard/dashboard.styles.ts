@@ -139,7 +139,7 @@ export const Notes = styled.div<iVisible>`
     display: flex;
     position: absolute;
     flex-direction: column;
-    width: 200px;
+    width: 250px;
     height: 100vh;
     overflow: auto;
     background: #151A28;
@@ -161,17 +161,16 @@ export const Notes = styled.div<iVisible>`
         width: 40px;
         height: 40px;
         color: #931F1D;
-        transform: translate(50%, 20%);
+        transform: translateX(50%);
+        left: 185px;
         position: absolute;
-        left: 65%;
-        top: -0.5%;
+        top: -5px;
         cursor: pointer;
     }
 
     .Close::active{
         background: none;
     }
-
 
 
     h1{
@@ -232,11 +231,6 @@ export const Notes = styled.div<iVisible>`
 
     @media(min-width: 768px){
         width: 300px;
-
-        .Close{
-            transform: translateX(50%);
-            left: 75%;
-        }
     }
 
     
