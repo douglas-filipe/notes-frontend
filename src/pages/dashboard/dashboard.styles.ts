@@ -139,7 +139,7 @@ export const Notes = styled.div<iVisible>`
     display: flex;
     position: absolute;
     flex-direction: column;
-    width: 250px;
+    width: 300px;
     height: 100vh;
     overflow: auto;
     background: #151A28;
@@ -162,7 +162,7 @@ export const Notes = styled.div<iVisible>`
         height: 40px;
         color: #931F1D;
         transform: translateX(50%);
-        left: 185px;
+        left: 220px;
         position: absolute;
         top: -5px;
         cursor: pointer;
