@@ -65,6 +65,7 @@ export const Icons = styled.div`
 `
 
 export const NoteEditSection = styled.section`
+    height: 100%;
     textarea{
         width: 90%;
         border: none;
