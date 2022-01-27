@@ -131,7 +131,7 @@ export const Dashboard = () => {
                     to={{ pathname: `/note/${n._id}` }}
                     activeClassName="selected"
                   >
-                    <p>{n.desc.substring(0, 20)}...</p>
+                    <p>{n.title.substring(0, 20)}...</p>
                     <p>{formatData(n.createdAt)}</p>
                   </NavLink>
                 );
